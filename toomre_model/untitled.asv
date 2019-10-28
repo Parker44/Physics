@@ -1,0 +1,12 @@
+% frequency of plot rendering
+o_freq = 1;
+
+% core 1
+c1_pos = [10 10 0];
+c1_vel = [1 1 0];
+
+
+% core 2
+c2_pos = [20 20 0];
+c2_vel = [-1 -1 0];
+

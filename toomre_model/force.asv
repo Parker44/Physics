@@ -1,0 +1,5 @@
+function f = force(m1, m2, r)
+    % gravitational constant, G = 1
+    f = (m1*m2)./r.^2;
+end
+

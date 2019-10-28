@@ -1,0 +1,200 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>PHYS 410 - Project 1 - The Toomre Model</title><meta name="generator" content="MATLAB 9.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-10-15"><meta name="DC.source" content="writeup.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>PHYS 410 - Project 1 - The Toomre Model</h1><!--introduction--><p>This project is comprised of multiple scripts and functions used for simulating galactic collisions using a centered second order finite difference approximation.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Two Particle System: Convergence Test FDA</a></li><li><a href="#2">Single Galaxy Dynamics</a></li><li><a href="#3">Multi-Galaxy Dynamics</a></li></ul></div><h2 id="1">Two Particle System: Convergence Test FDA</h2><p>To approximate the trajectories of 2 particles in mutual orbit around another we setup an <img src="writeup_eq15992336430298040964.png" alt="$O(\Delta t^2)$" style="width:45px;height:16px;"> finite difference approximation. The masses of the particles are <img src="writeup_eq18050816289170250039.png" alt="$m_1 = 1$" style="width:44px;height:12px;"> and <img src="writeup_eq09218696429143603615.png" alt="$m_2 = 0.5$" style="width:57px;height:12px;"> and they are separated by a distance of <img src="writeup_eq00007720794469376990.png" alt="$r=0.5$" style="width:45px;height:11px;">. These particles each require a certain initial velocity to ensure they have circular orbits around their center of mass. To determine each initial velocity we must first determine the distance of each particle from the center of mass (COM) of the system. We will assume the COM is located at the origin and that the two particles both lie along the x-axis. The equation for the location of the center of mass is given by</p><p><img src="writeup_eq07961160830982082198.png" alt="$COM = \frac{m_1 r_1 + m_2 r_2}{m_1 + m_2} = 0$" style="width:141px;height:19px;">.</p><p>We will also note that <img src="writeup_eq05736046819668395486.png" alt="$r = r_1 + r_2$" style="width:68px;height:11px;">. Using these two equations we can derive an expression for <img src="writeup_eq06945466075237462804.png" alt="$r_1$" style="width:11px;height:9px;"> and <img src="writeup_eq17345260930282413950.png" alt="$r_2$" style="width:11px;height:9px;">.</p><p><img src="writeup_eq13043075069639894834.png" alt="$m_1 r_1 = m_2 r_2 = m_2 (r - r_1)$" style="width:168px;height:15px;"></p><p><img src="writeup_eq03211071731085620091.png" alt="$m_1 r_1 + m_2 r_1 = m_2 r$" style="width:125px;height:11px;"></p><p><img src="writeup_eq15274322771586341159.png" alt="$m r_1 = m_2 r$" style="width:70px;height:9px;"></p><p><img src="writeup_eq05917166035785745221.png" alt="$r_1 = \frac{m_2}{m}r$" style="width:55px;height:17px;"></p><p><img src="writeup_eq06085466502660885306.png" alt="$\vec{r_1} = \frac{m_2}{m}r\hat{x}$" style="width:64px;height:17px;"></p><p>By using the same COM formula but instead substituting <img src="writeup_eq00227454283995933721.png" alt="$r_1 = r - r_2$" style="width:68px;height:9px;"> we find that</p><p><img src="writeup_eq07907692100264634654.png" alt="$r_2 = \frac{m_1}{m}r$" style="width:55px;height:17px;"></p><p><img src="writeup_eq14924649953230072104.png" alt="$\vec{r_2} = -\frac{m_1}{m}r\hat{x}$" style="width:75px;height:17px;"></p><p>Now that we have the distances of each particle from the COM we can determine their initial velocities necessary for mutual orbit. We simply have to notice that the gravitational acceleration due to the other particle (with G=1) provides the centripetal acceleration about the COM. For <img src="writeup_eq17611615054256613636.png" alt="$m_1$" style="width:17px;height:9px;"> we have</p><p><img src="writeup_eq05564481332219835753.png" alt="$\frac{m_2}{r^2} = \frac{v_1^2}{r_1}$" style="width:47px;height:23px;"></p><p><img src="writeup_eq15129548760251588315.png" alt="$v_1 = \sqrt{\frac{m_2 r_1}{r^2}} = \frac{\sqrt{m_2 r_1}}{r}$" style="width:125px;height:21px;"></p><p><img src="writeup_eq05146303522193425705.png" alt="$\vec{v_1} = \frac{\sqrt{m_2 r_1}}{r}\hat{y}$" style="width:74px;height:21px;"></p><p>Using the same method for <img src="writeup_eq03007134714359720275.png" alt="$v_2$" style="width:11px;height:9px;"> we find that</p><p><img src="writeup_eq06484435051604528039.png" alt="$v_2 = \frac{\sqrt{m_1 r_2}}{r}$" style="width:65px;height:21px;"></p><p><img src="writeup_eq06084824926081504898.png" alt="$\vec{v_2} = -\frac{\sqrt{m_1 r_2}}{r}\hat{y}$" style="width:85px;height:21px;"></p><p>The mutual orbit simulation can now be performed using these initial conditions. We currently possess <img src="writeup_eq17775277708408636508.png" alt="$r_1(0)$" style="width:30px;height:15px;">, <img src="writeup_eq15082386183019771566.png" alt="$r_2(0)$" style="width:30px;height:15px;">, <img src="writeup_eq09323743627862361574.png" alt="$v_1(0)$" style="width:30px;height:15px;">, and <img src="writeup_eq17491587394328201103.png" alt="$v_2(0)$" style="width:30px;height:15px;">. For our second order FDA we require <img src="writeup_eq10466326495969252130.png" alt="$r_1(\Delta t)$" style="width:40px;height:15px;"> and <img src="writeup_eq18109916142883815522.png" alt="$r_2(\Delta t)$" style="width:40px;height:15px;">: the particle positions at the next iteration. These are determined using the kinematics equation</p><p><img src="writeup_eq06862326553236515954.png" alt="$r_{n+1} = r_n + \Delta t v_n + 0.5 \Delta t^2 a_n$" style="width:183px;height:15px;"></p><p>where <img src="writeup_eq00752181216644108901.png" alt="$a_n$" style="width:13px;height:9px;"> is the gravitational acceleration experienced by the particle which has been determined in the previous steps. For <img src="writeup_eq17611615054256613636.png" alt="$m_1$" style="width:17px;height:9px;">: <img src="writeup_eq06132281889856209356.png" alt="$\vec{a_n} = -\frac{m_2}{r^2}\hat{x}$" style="width:70px;height:17px;"> and for <img src="writeup_eq13351576542735805913.png" alt="$m_2$" style="width:17px;height:9px;">: <img src="writeup_eq16050000319585931068.png" alt="$\vec{a_n} = \frac{m_1}{r^2}\hat{x}$" style="width:59px;height:17px;">.</p><p>Using these first two positions we can now approximate the time evolution of this system using the centered second order FDA and setting it equal to the gravitational acceleration.</p><p><img src="writeup_eq13535307318529536941.png" alt="$\vec{a_n} = \frac{d^2 \vec{r}}{dt^2}(t_n) \approx = \frac{\vec{r_{n+1}} - 2\vec{r_n} + \vec{r_{n-1}}}{\Delta t^2}$" style="width:178px;height:20px;"></p><p><img src="writeup_eq14369486082448741513.png" alt="$\vec{r_{n+1}} = 2\vec{r_n} - \vec{r_{n-1}} + \Delta t^2 \vec{a_n}$" style="width:167px;height:15px;"></p><p>A convergence test was performed to check that there is <img src="writeup_eq15992336430298040964.png" alt="$O(\Delta t^2)$" style="width:45px;height:16px;"> error in the x-component of the solution for mass <img src="writeup_eq17611615054256613636.png" alt="$m_1$" style="width:17px;height:9px;">. Below are the plots of the trajectories of <img src="writeup_eq17611615054256613636.png" alt="$m_1$" style="width:17px;height:9px;"> for <img src="writeup_eq00608703111161005253.png" alt="$l=7,8,9,10$" style="width:80px;height:13px;">.</p><p><img vspace="5" hspace="5" src="displacement.png" alt=""> </p><p>Next we reduce the sample sizes for <img src="writeup_eq07410586792151728402.png" alt="$l=8,9,10$" style="width:66px;height:13px;"> to only the times that <img src="writeup_eq14590362989304988506.png" alt="$l=7$" style="width:31px;height:11px;"> possess so that all solutions contain the same number of samples. This allows the datasets to be subtracted from another to obtain the error. Below is a plot of the difference between the x-component solutions for levels 7-8, 8-9, and 9-10.</p><p><img vspace="5" hspace="5" src="differences.png" alt=""> </p><p>To prove that this FDA exhibits <img src="writeup_eq15992336430298040964.png" alt="$O(\Delta t^2)$" style="width:45px;height:16px;"> convergence, we show that when \Delta t is divided by 2, the error is divided by 2^2. For level 7, \Delta t is double that for level 8, therefore its error should be 2^2 times greater than that for level 8. These two curves overlap when the error for level 8 is scaled by 2^2. As for level 9, its error will overlap with that of level 7 when scaled by 4^2, since \Delta t is 4 times greater than that of level 9. Below is a plot of these scaled, overlapping curves which proves our <img src="writeup_eq15992336430298040964.png" alt="$O(\Delta t^2)$" style="width:45px;height:16px;"> convergence.</p><p><img vspace="5" hspace="5" src="scaled.png" alt=""> </p><h2 id="2">Single Galaxy Dynamics</h2><p>Before we test galaxy collisions, we ensure that the stars orbiting a single core will remain in orbit. This requires combinations of values for the minimum orbital radius, cores masses and discretization level. A stable galaxy configuration was obtained for <img src="writeup_eq11947210389577291523.png" alt="$r_{min} = 0.025$" style="width:79px;height:13px;">, <img src="writeup_eq05978985854028712657.png" alt="$m_{core} = 1$" style="width:58px;height:13px;"> and <img src="writeup_eq04782534419861804070.png" alt="$l = 9$" style="width:31px;height:11px;">.</p><p>Plot</p><h2 id="3">Multi-Galaxy Dynamics</h2><p>To simulate galaxy collisions I created a function called toomre() which takes the arguments: <img src="writeup_eq07479334403923390645.png" alt="$t_{max}$" style="width:25px;height:12px;">, discretization level, core masses, core initial positions, core initial velocities, and the number of stars per core. The number of cores is inferred from the number of core masses provided. The initial positions of the cores are already provided and they are used to calculate the initial positions of the orbiting stars. Each star is given an arbitrary angle and radius (between <img src="writeup_eq16510662502083115478.png" alt="$r_{min}$" style="width:25px;height:9px;"> and <img src="writeup_eq15016413228523227187.png" alt="$r_{max}$" style="width:27px;height:9px;">) to determine its position relative to its core as well as its absolute position.</p><p>To determine subsequent positions, the toomre function calls another function called nbodyaccn to determine the accelerations of each particle due to the gravitational force of each core. Since a second order FDA requires 2 positions, we calculate the position at the second time iteration using the formula</p><p><img src="writeup_eq07313885163402681074.png" alt="$r_{n+1} = r_n + \Delta t v_n - 0.5 \Delta t a_n$" style="width:177px;height:14px;"></p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2017b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% PHYS 410 - Project 1 - The Toomre Model
+% This project is comprised of multiple scripts and functions
+% used for simulating galactic collisions using a centered second order
+% finite difference approximation.
+
+%% Two Particle System: Convergence Test FDA
+% To approximate the trajectories of 2 particles in mutual orbit around
+% another we setup an $O(\Delta t^2)$ finite difference approximation. The masses of the particles are $m_1 = 1$ and $m_2 = 0.5$ and
+% they are separated by a distance of $r=0.5$. These particles each require a
+% certain initial velocity to ensure they have circular orbits around
+% their center of mass. To determine each initial velocity we must first determine the
+% distance of each particle from the center of mass (COM) of the system. We will
+% assume the COM is located at the origin and that the two particles both
+% lie along the x-axis. The equation for the location of the center of mass
+% is given by 
+%
+% $COM = \frac{m_1 r_1 + m_2 r_2}{m_1 + m_2} = 0$.
+%
+% We will also note that $r = r_1 + r_2$. Using these two equations we can derive
+% an expression for $r_1$ and $r_2$.
+%
+% $m_1 r_1 = m_2 r_2 = m_2 (r - r_1)$
+%
+% $m_1 r_1 + m_2 r_1 = m_2 r$
+%
+% $m r_1 = m_2 r$
+%
+% $r_1 = \frac{m_2}{m}r$
+%
+% $\vec{r_1} = \frac{m_2}{m}r\hat{x}$
+%
+% By using the same COM formula but instead substituting $r_1 = r - r_2$ we
+% find that
+%
+% $r_2 = \frac{m_1}{m}r$
+%
+% $\vec{r_2} = -\frac{m_1}{m}r\hat{x}$
+%
+% Now that we have the distances of each particle from the COM we can
+% determine their initial velocities necessary for mutual orbit. We simply
+% have to notice that the gravitational acceleration due to the other particle (with G=1) provides the centripetal
+% acceleration about the COM. For $m_1$ we have
+%
+% $\frac{m_2}{r^2} = \frac{v_1^2}{r_1}$
+%
+% $v_1 = \sqrt{\frac{m_2 r_1}{r^2}} = \frac{\sqrt{m_2 r_1}}{r}$
+%
+% $\vec{v_1} = \frac{\sqrt{m_2 r_1}}{r}\hat{y}$
+%
+% Using the same method for $v_2$ we find that
+%
+% $v_2 = \frac{\sqrt{m_1 r_2}}{r}$
+%
+% $\vec{v_2} = -\frac{\sqrt{m_1 r_2}}{r}\hat{y}$
+% 
+% The mutual orbit simulation can now be performed using these initial
+% conditions. We currently possess $r_1(0)$, $r_2(0)$, $v_1(0)$, and
+% $v_2(0)$. For our second order FDA we require $r_1(\Delta t)$ and
+% $r_2(\Delta t)$: the particle positions at the next iteration. These are determined using the kinematics equation 
+%
+% $r_{n+1} = r_n + \Delta t v_n + 0.5 \Delta t^2 a_n$
+% 
+% where $a_n$ is the gravitational acceleration experienced by the particle which has been determined in the previous steps. For
+% $m_1$: $\vec{a_n} = -\frac{m_2}{r^2}\hat{x}$ and for $m_2$: $\vec{a_n} =
+% \frac{m_1}{r^2}\hat{x}$.
+%
+% Using these first two positions we can now approximate the time evolution
+% of this system using the centered second order FDA
+% and setting it equal to the gravitational acceleration.
+%
+% $\vec{a_n} = \frac{d^2 \vec{r}}{dt^2}(t_n) \approx = \frac{\vec{r_{n+1}} - 2\vec{r_n} + \vec{r_{n-1}}}{\Delta t^2}$
+%
+% $\vec{r_{n+1}} = 2\vec{r_n} - \vec{r_{n-1}} + \Delta t^2 \vec{a_n}$
+%
+% A convergence test was performed to check that there is $O(\Delta t^2)$
+% error in the x-component of the solution for mass $m_1$. Below are the
+% plots of the trajectories of $m_1$ for $l=7,8,9,10$.
+%
+% <<displacement.png>>
+%
+% Next we reduce the sample sizes for $l=8,9,10$ to only the times that
+% $l=7$ possess so that all solutions contain the same number of samples.
+% This allows the datasets to be subtracted from another to obtain the
+% error. Below is a plot of the difference between the x-component
+% solutions for levels 7-8, 8-9, and 9-10.
+%
+% <<differences.png>>
+%
+% To prove that this FDA exhibits $O(\Delta t^2)$ convergence, we show that
+% when \Delta t is divided by 2, the error is divided by 2^2. For level 7, \Delta
+% t is double that for level 8, therefore its error should be 2^2 times
+% greater than that for level 8. These two curves overlap when the error
+% for level 8 is scaled by 2^2. As for level 9, its error will overlap with
+% that of level 7 when scaled by 4^2, since \Delta t is 4 times greater
+% than that of level 9. Below is a plot of these scaled, overlapping curves
+% which proves our $O(\Delta t^2)$ convergence.
+%
+% <<scaled.png>>
+%
+
+%% Single Galaxy Dynamics
+% Before we test galaxy collisions, we ensure that the stars orbiting a
+% single core will remain in orbit. This requires combinations of
+% values for the minimum orbital radius, cores masses and discretization
+% level. A stable galaxy configuration was obtained for $r_{min} = 0.025$,
+% $m_{core} = 1$ and $l = 9$.
+%
+% Plot
+% 
+
+%% Multi-Galaxy Dynamics
+% To simulate galaxy collisions I created a function called toomre()
+% which takes the arguments: $t_{max}$, discretization level, core masses,
+% core initial positions, core initial velocities, and the number of stars
+% per core. The number of cores is inferred from the number of core masses
+% provided. The initial positions of the cores are already provided and
+% they are used to calculate the initial positions of the orbiting stars.
+% Each star is given an arbitrary angle and radius (between $r_{min}$ and
+% $r_{max}$) to determine its position relative to its core as well as its
+% absolute position.
+%
+% To determine subsequent positions, the toomre function calls another
+% function called nbodyaccn to determine the accelerations of each particle
+% due to the gravitational force of each core. Since a second order FDA
+% requires 2 positions, we calculate the position at the second time
+% iteration using the formula
+%
+% $r_{n+1} = r_n + \Delta t v_n - 0.5 \Delta t a_n$
+##### SOURCE END #####
+--></body></html>
