@@ -2,7 +2,8 @@
 Created on Thu Feb 21 17:43:53 2019
 @author: Parker Lloyd
 
-The following script processes temperature-dependent voltage data to determine the temperature-dependence of the London penetration for a superconducting slab of YBCO.
+The following script processes temperature-dependent voltage data to determine the temperature-dependence 
+of the London penetration depth for a superconducting slab of YBCO.
 """
 import numpy as np
 import matplotlib.pyplot as plt
